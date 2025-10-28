@@ -1,3 +1,4 @@
+//https://developer.nvidia.com/blog/how-overlap-data-transfers-cuda-cc/
 #include <cuda_runtime.h>
 #include <stdio.h>
 

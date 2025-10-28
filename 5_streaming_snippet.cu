@@ -18,3 +18,5 @@ cudaStreamSynchronize(s_2);
 
 cudaStreamDestroy(s_1);
 cudaStreamDestroy(s_2);
+
+//custom created streams run concurrently (s_1 and s_2 run independently of each other), but tasks scheduled on each stream execute sequentially, respecting the order in which they were scheduled.

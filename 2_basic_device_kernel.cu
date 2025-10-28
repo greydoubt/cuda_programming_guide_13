@@ -1,27 +1,28 @@
 #include <cuda_runtime.h>
 #include <stdio.h>
 
-__global__ void device_kernel_add() {
-  printf("Does add on device");
-}
+__global__ void printSuccessForCorrectExecutionConfiguration()
+{
 
-__global__ void device_kernel_mul() {
-  printf("Does mul on device");
-}
-
-void host_func_add() {
-  printf("Does add on host");
-}
-
-void host_func_mul() {
-  printf("Does mul on host");
+  if(threadIdx.x == 1023 && blockIdx.x == 255)
+  {
+    printf("Success!\n");
+  }
 }
 
 int main()
 {
-  helloCPU();
-  
-  helloGPU<<<1, 1>>>();
-  
+  /*
+   * This is one possible execution context that will make
+   * the kernel launch print its success message.
+   */
+
+  printSuccessForCorrectExecutionConfiguration<<<256, 1024>>>();
+
+  /*
+   * Don't forget kernel execution is asynchronous and you must
+   * sync on its completion.
+   */
+
   cudaDeviceSynchronize();
 }

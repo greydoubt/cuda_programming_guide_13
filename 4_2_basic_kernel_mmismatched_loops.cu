@@ -4,8 +4,9 @@
 __global__ void initializeElementsTo(int initialValue, int *a, int N)
 {
   int i = threadIdx.x + blockIdx.x * blockDim.x;
-  if (i < N)
+  if (i < N) // Check to make sure i (idx) maps to some value within `N`
   {
+  // Only do work if it does
     a[i] = initialValue;
   }
 }

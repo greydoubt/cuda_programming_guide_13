@@ -14,14 +14,15 @@ __global__
 void doubleElements(int *a, int N)
 {
 
-  /*
-   * Use a grid-stride loop so each thread does work
-   * on more than one element in the array.
-   */
-
   int idx = blockIdx.x * blockDim.x + threadIdx.x;
   int stride = gridDim.x * blockDim.x;
 
+  /*
+   * The previous code (now commented out) attempted
+   * to access an element outside the range of `a`.
+   */
+
+  // for (int i = idx; i < N + stride; i += stride)
   for (int i = idx; i < N; i += stride)
   {
     a[i] *= 2;
@@ -48,11 +49,35 @@ int main()
 
   init(a, N);
 
-  size_t threads_per_block = 256;
+  /*
+   * The previous code (now commented out) attempted to launch
+   * the kernel with more than the maximum number of threads per
+   * block, which is 1024.
+   */
+
+  size_t threads_per_block = 1024;
+  /* size_t threads_per_block = 2048; */
   size_t number_of_blocks = 32;
 
+  cudaError_t syncErr, asyncErr;
+
   doubleElements<<<number_of_blocks, threads_per_block>>>(a, N);
-  cudaDeviceSynchronize();
+
+  /*
+   * Catch errors for both the kernel launch above and any
+   * errors that occur during the asynchronous `doubleElements`
+   * kernel execution.
+   */
+
+  syncErr = cudaGetLastError();
+  asyncErr = cudaDeviceSynchronize();
+
+  /*
+   * Print errors should they exist.
+   */
+
+  if (syncErr != cudaSuccess) printf("Error: %s\n", cudaGetErrorString(syncErr));
+  if (asyncErr != cudaSuccess) printf("Error: %s\n", cudaGetErrorString(asyncErr));
 
   bool areDoubled = checkElementsAreDoubled(a, N);
   printf("All elements were doubled? %s\n", areDoubled ? "TRUE" : "FALSE");

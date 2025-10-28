@@ -1,3 +1,4 @@
+//https://developer.nvidia.com/blog/how-access-global-memory-efficiently-cuda-c-kernels/
 #include <cuda_runtime.h>
 #include <stdio.h>
 #include <assert.h>

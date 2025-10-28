@@ -25,8 +25,8 @@ int main()
 
   const uint64_t size = 64;
 
-  int grid 1;
-  int block 1;
+  int grid = 1;
+  int block = 1;
 
   cudaStream_t s_1, s_2;
   cudaStreamCreate(&s_1);
